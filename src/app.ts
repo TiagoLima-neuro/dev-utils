@@ -108,7 +108,9 @@ encoderRunBtn.addEventListener("click", async () => {
         result = base91Decode(inputText);
         break;
       case "gzip-compress":
+        console.log(inputText);
         result = await gzipCompress(inputText);
+        console.log(result);
         break;
       case "gzip-decompress":
         result = await gzipDecompress(inputText);

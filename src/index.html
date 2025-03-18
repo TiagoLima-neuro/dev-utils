@@ -1,101 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dev Utils</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Dev Utils</h1>
-        <p class="subtitle">Secure, client-side only developer utilities</p>
+      <h1>Dev Utils</h1>
+      <p class="subtitle">Funções 100% client-side para uso interno</p>
     </header>
 
     <main>
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="encoders">Encoders & Compressors</button>
-            <button class="tab-btn" data-tab="formatters">Formatters</button>
-            <button class="tab-btn" data-tab="validators">Validators</button>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="encoders">
+          Codificadores & Compressores
+        </button>
+        <button class="tab-btn" data-tab="formatters">Formatadores</button>
+        <button class="tab-btn" data-tab="validators">Validadores</button>
+      </div>
+
+      <div class="tab-content">
+        <!-- Encoders & Compressors -->
+        <div class="tab-pane active" id="encoders">
+          <div class="form-group">
+            <label for="encoder-type">Selecione a Operação:</label>
+            <select id="encoder-type">
+              <option value="base64-encode">Base64</option>
+              <option value="base64-decode">Base64 (Decodificar)</option>
+              <option value="base91-encode">Base91</option>
+              <option value="base91-decode">Base91 (Decodificar)</option>
+              <option value="gzip-compress">GZIP</option>
+              <option value="gzip-decompress">GZIP (Descomprimir)</option>
+              <option value="zstd-compress">ZSTD</option>
+              <option value="zstd-decompress">ZSTD (Descomprimir)</option>
+            </select>
+          </div>
+          <div class="input-output">
+            <div class="form-group">
+              <label for="encoder-input">Input:</label>
+              <textarea
+                id="encoder-input"
+                placeholder="Enter text to encode/compress"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="encoder-output">Output:</label>
+              <textarea id="encoder-output" readonly></textarea>
+            </div>
+          </div>
+          <button id="encoder-run" class="primary-btn">Executar</button>
         </div>
 
-        <div class="tab-content">
-            <!-- Encoders & Compressors -->
-            <div class="tab-pane active" id="encoders">
-                <div class="form-group">
-                    <label for="encoder-type">Select Operation:</label>
-                    <select id="encoder-type">
-                        <option value="base64-encode">Base64</option>
-                        <option value="base64-decode">Base64 (Decode)</option>
-                        <option value="base91-encode">Base91</option>
-                        <option value="base91-decode">Base91 (Decode)</option>
-                        <option value="gzip-compress">GZIP</option>
-                        <option value="gzip-decompress">GZIP (Decompress)</option>
-                        <option value="zstd-compress">ZSTD</option>
-                        <option value="zstd-decompress">ZSTD (Decompress)</option>
-                    </select>
-                </div>
-                <div class="input-output">
-                    <div class="form-group">
-                        <label for="encoder-input">Input:</label>
-                        <textarea id="encoder-input" placeholder="Enter text to encode/compress"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="encoder-output">Output:</label>
-                        <textarea id="encoder-output" readonly></textarea>
-                    </div>
-                </div>
-                <button id="encoder-run" class="primary-btn">Run</button>
+        <!-- Formatters -->
+        <div class="tab-pane" id="formatters">
+          <div class="form-group">
+            <label for="formatter-type">Selecione o Formato:</label>
+            <select id="formatter-type">
+              <option value="json">JSON</option>
+              <option value="yaml">YAML</option>
+            </select>
+          </div>
+          <div class="input-output">
+            <div class="form-group">
+              <label for="formatter-input">Input:</label>
+              <textarea
+                id="formatter-input"
+                placeholder="Enter text to format"
+              ></textarea>
             </div>
-
-            <!-- Formatters -->
-            <div class="tab-pane" id="formatters">
-                <div class="form-group">
-                    <label for="formatter-type">Select Format:</label>
-                    <select id="formatter-type">
-                        <option value="json">JSON</option>
-                        <option value="yaml">YAML</option>
-                    </select>
-                </div>
-                <div class="input-output">
-                    <div class="form-group">
-                        <label for="formatter-input">Input:</label>
-                        <textarea id="formatter-input" placeholder="Enter text to format"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="formatter-output">Output:</label>
-                        <textarea id="formatter-output" readonly></textarea>
-                    </div>
-                </div>
-                <div class="btn-group">
-                    <button id="formatter-validate" class="primary-btn">Validate</button>
-                    <button id="formatter-format" class="primary-btn">Format</button>
-                </div>
+            <div class="form-group">
+              <label for="formatter-output">Output:</label>
+              <textarea id="formatter-output" readonly></textarea>
             </div>
-
-            <!-- Validators -->
-            <div class="tab-pane" id="validators">
-                <div class="form-group">
-                    <label for="validator-type">Select Validator:</label>
-                    <select id="validator-type">
-                        <option value="cpf">Brazilian CPF</option>
-                        <option value="cnpj">Brazilian CNPJ</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="validator-input">Input:</label>
-                    <input type="text" id="validator-input" placeholder="Enter value to validate">
-                </div>
-                <button id="validator-run" class="primary-btn">Validate</button>
-                <div class="validator-result" id="validator-result"></div>
-            </div>
+          </div>
+          <div class="btn-group">
+            <button id="formatter-validate" class="primary-btn">Validar</button>
+            <button id="formatter-format" class="primary-btn">Formatar</button>
+          </div>
         </div>
+
+        <!-- Validators -->
+        <div class="tab-pane" id="validators">
+          <div class="form-group">
+            <label for="validator-type">Selecione o Validador:</label>
+            <select id="validator-type">
+              <option value="cpf">CPF</option>
+              <option value="cnpj">CNPJ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="validator-input">Input:</label>
+            <input
+              type="text"
+              id="validator-input"
+              placeholder="Enter value to validate"
+            />
+          </div>
+          <button id="validator-run" class="primary-btn">Validar</button>
+          <div class="validator-result" id="validator-result"></div>
+        </div>
+      </div>
     </main>
 
     <footer>
-        <p>Client-side only - No data leaves your browser</p>
+      <p>
+        100% Client-side - Nenhum dado é enviado para o servidor; ele não existe
+      </p>
     </footer>
 
     <script type="module" src="app.js"></script>
-</body>
+  </body>
 </html>
