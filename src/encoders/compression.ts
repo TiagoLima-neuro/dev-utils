@@ -8,7 +8,11 @@ async function loadZstd() {
   if (zstdLoaded) return;
   return new Promise<void>((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = "../wasm/zstd/zstd.js";
+    // Use a path that works both locally and when deployed
+    const basePath = window.location.pathname.includes('/dev-utils') 
+      ? '/dev-utils' 
+      : '';
+    script.src = `${basePath}/wasm/zstd/zstd.js`;
     script.onload = () => {
       zstdLoaded = true;
       Module.onRuntimeInitialized = () => resolve();

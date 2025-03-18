@@ -26,6 +26,8 @@ jobs:
         run: |
           chmod +x ./build.sh
           ./build.sh
+          # Create .nojekyll file to prevent GitHub Pages from using Jekyll
+          touch dist/.nojekyll
 
       - name: Upload dist/ folder as artifact
         uses: actions/upload-pages-artifact@v3
