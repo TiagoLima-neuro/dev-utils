@@ -19,6 +19,5 @@ cp src/*.html dist/
 cp src/*.css dist/
 cp -r src/wasm dist/wasm
 cp src/wasm/**/*.wasm dist/
-rm dist/wasm/**/*.wasm
 echo "Build complete! Files are ready in the dist directory for S3 deployment."
 echo "To deploy to S3, use: aws s3 sync dist/ s3://your-bucket-name/ --acl public-read"
