@@ -3,9 +3,10 @@ on:
     branches:
       - main
 jobs:
-  build-and-deploy:
+  deploy:
     environment:
       name: prd
+      url: https://tiagolima-neuro.github.io/dev-utils
     permissions:
       pages: write
       id-token: write
