@@ -3,6 +3,7 @@ import {
   base64Decode,
   base91Encode,
   base91Decode,
+  sha256,
 } from "./encoders/base.js";
 import {
   gzipCompress,
@@ -120,6 +121,12 @@ encoderRunBtn.addEventListener("click", async () => {
         break;
       case "zstd-decompress":
         result = await zstdDecompress(inputText);
+        break;
+      case "sha256-base64":
+        result = await sha256(inputText, "base64");
+        break;
+      case "sha256-hex":
+        result = await sha256(inputText, "hex");
         break;
       default:
         throw new Error("Invalid encoder type");
