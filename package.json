@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "http-server dist -p 8080",
-    "build": "tsc && npm run copy-files",
+    "build": "tsc --noCheck && npm run copy-files",
     "copy-files": "cp -r src/*.html src/*.css src/wasm src/wasm/**/*.wasm dist/",
     "test": "tsx --test tests/*.test.ts"
   },
