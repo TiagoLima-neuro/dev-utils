@@ -1,16 +1,20 @@
-import { asyncBufferFromUrl, parquetReadObjects } from "./parquet/hyparquet.js";
+import { parquetReadObjects } from "./parquet/hyparquet.js";
 
 const loadParquetData = async (
-  url: string,
+  file: File,
   columns: string[],
   rowStart: number,
   rowEnd: number
 ) => {
   try {
-    const file = await asyncBufferFromUrl({ url });
+    const parquetFile = {
+      byteLength: file.size,
+      slice: async (start: number, end: number) =>
+        file.slice(start, end).arrayBuffer(),
+    };
     const data = await parquetReadObjects({
-      file,
-      columns: columns,
+      file: parquetFile,
+      columns: columns.length > 0 ? columns : undefined,
       rowStart: rowStart,
       rowEnd: rowEnd,
     });
@@ -29,7 +33,7 @@ const displayParquetData = (data: any[], containerId: string) => {
     return;
   }
 
-  if (!data) {
+  if (!data || data.length === 0) {
     container.innerHTML = "<p>No data to display.</p>";
     return;
   }
@@ -38,6 +42,7 @@ const displayParquetData = (data: any[], containerId: string) => {
   const table = document.createElement("table");
   table.style.borderCollapse = "collapse";
   table.style.width = "100%";
+  table.classList.add("parquet-table");
 
   // Create table header
   if (data.length > 0) {
@@ -58,7 +63,7 @@ const displayParquetData = (data: any[], containerId: string) => {
     const row = document.createElement("tr");
     Object.values(item).forEach((value) => {
       const td = document.createElement("td");
-      td.textContent = value as string;
+      td.textContent = value !== null ? String(value) : "null";
       td.style.border = "1px solid black";
       td.style.padding = "8px";
       td.style.textAlign = "left";
@@ -69,14 +74,58 @@ const displayParquetData = (data: any[], containerId: string) => {
 
   container.innerHTML = ""; // Clear previous content
   container.appendChild(table);
+
+  // Add row count information
+  const infoDiv = document.createElement("div");
+  infoDiv.classList.add("parquet-info");
+  infoDiv.textContent = `Exibindo ${data.length} linha(s)`;
+  container.appendChild(infoDiv);
 };
 
-(window as any).loadAndDisplayParquet = async () => {
-  const url = "https://hyperparam-public.s3.amazonaws.com/bunnies.parquet";
-  const columns = ["Breed Name", "Lifespan"];
-  const rowStart = 10;
-  const rowEnd = 20;
+// Function to be called from the UI
+export const loadParquetFromUI = async () => {
+  const fileInput = document.getElementById("parquet-file") as HTMLInputElement;
+  const columnsInput = document.getElementById(
+    "parquet-columns"
+  ) as HTMLInputElement;
+  const rowStartInput = document.getElementById(
+    "parquet-row-start"
+  ) as HTMLInputElement;
+  const rowEndInput = document.getElementById(
+    "parquet-row-end"
+  ) as HTMLInputElement;
+  const container = document.getElementById("parquet-data-container");
 
-  const data = await loadParquetData(url, columns, rowStart, rowEnd);
-  displayParquetData(data as any, "parquet-data-container");
+  if (!fileInput || !rowStartInput || !rowEndInput || !container) {
+    console.error("Missing UI elements");
+    return;
+  }
+
+  // Show loading indicator
+  container.innerHTML = "<p>Carregando dados...</p>";
+
+  const file = fileInput.files?.[0];
+  if (!file) {
+    container.innerHTML = '<p class="error">Arquivo não selecionado</p>';
+    return;
+  }
+
+  const columnsText = columnsInput.value.trim();
+  const rowStart = parseInt(rowStartInput.value, 10) || 0;
+  const rowEnd = parseInt(rowEndInput.value, 10) || 20;
+
+  // Parse columns, splitting by comma and trimming whitespace
+  const columns = columnsText
+    .split(",")
+    .map((col) => col.trim())
+    .filter((col) => col.length > 0);
+
+  try {
+    const data = await loadParquetData(file, columns, rowStart, rowEnd);
+    displayParquetData(data as any[], "parquet-data-container");
+  } catch (error) {
+    container.innerHTML = `<p class="error">Erro ao carregar dados: ${
+      (error as Error).message
+    }</p>`;
+  }
 };

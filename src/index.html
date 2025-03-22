@@ -19,6 +19,7 @@
         </button>
         <button class="tab-btn" data-tab="formatters">Formatadores</button>
         <button class="tab-btn" data-tab="validators">Validadores</button>
+        <button class="tab-btn" data-tab="parquet">Visualizador</button>
       </div>
 
       <div class="tab-content">
@@ -102,6 +103,36 @@
           <button id="validator-run" class="primary-btn">Validar</button>
           <div class="validator-result" id="validator-result"></div>
         </div>
+
+        <!-- Parquet Visualizer -->
+        <div class="tab-pane" id="parquet">
+          <div class="form-group">
+            <label for="parquet-file">Arquivo Parquet:</label>
+            <input type="file" id="parquet-file" />
+          </div>
+          <div class="form-group">
+            <label for="parquet-columns"
+              >Colunas (separadas por vírgula):</label
+            >
+            <input
+              type="text"
+              id="parquet-columns"
+              placeholder="coluna1, coluna2, coluna3"
+            />
+          </div>
+          <div class="form-group row">
+            <div class="col">
+              <label for="parquet-row-start">Linha inicial:</label>
+              <input type="number" id="parquet-row-start" min="0" value="0" />
+            </div>
+            <div class="col">
+              <label for="parquet-row-end">Linha final:</label>
+              <input type="number" id="parquet-row-end" min="1" value="20" />
+            </div>
+          </div>
+          <button id="parquet-load" class="primary-btn">Carregar Dados</button>
+          <div id="parquet-data-container" class="parquet-container"></div>
+        </div>
       </div>
     </main>
 
@@ -109,8 +140,6 @@
       <p>100% Client-side - Nenhum dado é enviado para servidores</p>
     </footer>
 
-    <button onclick="loadAndDisplayParquet()">Load Parquet Data</button>
-    <div id="parquet-data-container"></div>
     <script type="module" src="app.js"></script>
     <script type="module" src="parquet-view.js"></script>
   </body>

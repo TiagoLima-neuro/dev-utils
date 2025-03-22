@@ -18,6 +18,7 @@ import {
   formatYaml,
 } from "./formatters/index.js";
 import { validateCPF, validateCNPJ } from "./validators/brazilian.js";
+import { loadParquetFromUI } from "./parquet-view.js";
 
 // DOM Elements
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -67,6 +68,14 @@ const validatorRunBtn = document.getElementById(
 const validatorResult = document.getElementById(
   "validator-result"
 ) as HTMLDivElement;
+
+// Parquet elements
+const parquetLoadBtn = document.getElementById(
+  "parquet-load"
+) as HTMLButtonElement;
+
+// Parquet functionality
+parquetLoadBtn.addEventListener("click", loadParquetFromUI);
 
 // Tab functionality
 tabButtons.forEach((button) => {

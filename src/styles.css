@@ -182,3 +182,59 @@ footer {
   font-family: monospace;
   word-break: break-all;
 }
+
+/* Parquet Visualizer Styles */
+.parquet-container {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+.parquet-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.parquet-table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem;
+  border: 1px solid #2980b9;
+}
+
+.parquet-table td {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.parquet-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.parquet-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.parquet-info {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+.form-group.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.error {
+  color: var(--error-color);
+  background-color: rgba(231, 76, 60, 0.1);
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid var(--error-color);
+}
