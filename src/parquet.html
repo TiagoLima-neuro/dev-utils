@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizador</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Dev Utils</h1>
+      <p class="subtitle">Funções 100% client-side para uso interno</p>
+    </header>
+
+    <div class="wrapper">
+      <aside class="sidebar">
+        <a href="index.html" class="sidebar-link"
+          >Codificadores & Compressores</a
+        >
+        <a href="formatters.html" class="sidebar-link">Formatadores</a>
+        <a href="validators.html" class="sidebar-link">Validadores</a>
+        <a href="parquet.html" class="sidebar-link active">Visualizador</a>
+        <a href="diff.html" class="sidebar-link">Diff</a>
+      </aside>
+      <main>
+        <div class="tab-pane active" id="parquet">
+          <div class="form-group">
+            <label for="parquet-file">Arquivo Parquet:</label>
+            <input type="file" id="parquet-file" />
+          </div>
+          <div class="form-group">
+            <label for="parquet-columns"
+              >Colunas (separadas por vírgula):</label
+            >
+            <input
+              type="text"
+              id="parquet-columns"
+              placeholder="coluna1, coluna2, coluna3"
+            />
+          </div>
+          <div class="form-group row">
+            <div class="col">
+              <label for="parquet-row-start">Linha inicial:</label>
+              <input type="number" id="parquet-row-start" min="0" value="0" />
+            </div>
+            <div class="col">
+              <label for="parquet-row-end">Linha final:</label>
+              <input type="number" id="parquet-row-end" min="1" value="20" />
+            </div>
+          </div>
+          <button id="parquet-load" class="primary-btn">Carregar Dados</button>
+          <div id="parquet-data-container" class="parquet-container"></div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <p>100% Client-side - Nenhum dado é enviado para servidores</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+    <script type="module" src="parquet-view.js"></script>
+  </body>
+</html>

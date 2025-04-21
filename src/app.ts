@@ -19,6 +19,7 @@ import {
 } from "./formatters/index.js";
 import { validateCPF, validateCNPJ } from "./validators/brazilian.js";
 import { loadParquetFromUI } from "./parquet-view.js";
+import { diffLines } from "./diff/line.js";
 
 // DOM Elements
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -74,30 +75,71 @@ const parquetLoadBtn = document.getElementById(
   "parquet-load"
 ) as HTMLButtonElement;
 
+// Diff elements
+const diffInputOld = document.getElementById(
+  "diff-input-old"
+) as HTMLTextAreaElement;
+const diffInputNew = document.getElementById(
+  "diff-input-new"
+) as HTMLTextAreaElement;
+const diffOutputOld = document.getElementById(
+  "diff-output-old"
+) as HTMLDivElement;
+const diffOutputNew = document.getElementById(
+  "diff-output-new"
+) as HTMLDivElement;
+const diffRunBtn = document.getElementById("diff-run") as HTMLButtonElement;
+
 // Parquet functionality
-parquetLoadBtn.addEventListener("click", loadParquetFromUI);
+parquetLoadBtn?.addEventListener("click", loadParquetFromUI);
 
-// Tab functionality
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const tabId = button.getAttribute("data-tab");
+// Diff functionality
+diffRunBtn?.addEventListener("click", () => {
+  const oldText = diffInputOld.value;
+  const newText = diffInputNew.value;
 
-    // Update active tab button
-    tabButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
+  try {
+    const diffResult = diffLines(oldText, newText, {
+      ignoreNewlineAtEof: true,
+    });
 
-    // Update active tab pane
-    tabPanes.forEach((pane) => {
-      pane.classList.remove("active");
-      if (pane.id === tabId) {
-        pane.classList.add("active");
+    diffOutputOld.innerHTML = "";
+    diffOutputNew.innerHTML = "";
+
+    diffResult.forEach((part: { added?: any; removed?: any; value: any }) => {
+      if (part.added) {
+        const lineNew = document.createElement("div");
+        lineNew.classList.add("diff-added");
+        lineNew.textContent = part.value;
+        diffOutputNew.appendChild(lineNew);
+      } else if (part.removed) {
+        const lineOld = document.createElement("div");
+        lineOld.classList.add("diff-removed");
+        lineOld.textContent = part.value;
+        diffOutputOld.appendChild(lineOld);
+      } else {
+        const lineOld = document.createElement("div");
+        lineOld.classList.add("diff-unchanged");
+        lineOld.textContent = part.value;
+        diffOutputOld.appendChild(lineOld);
+        const lineNew = document.createElement("div");
+        lineNew.classList.add("diff-unchanged");
+        lineNew.textContent = part.value;
+        diffOutputNew.appendChild(lineNew);
       }
     });
-  });
+  } catch (error) {
+    diffOutputOld.innerHTML = `<div class="diff-error">Error: ${
+      (error as Error).message
+    }</div>`;
+    diffOutputNew.innerHTML = `<div class="diff-error">Error: ${
+      (error as Error).message
+    }</div>`;
+  }
 });
 
 // Encoder functionality
-encoderRunBtn.addEventListener("click", async () => {
+encoderRunBtn?.addEventListener("click", async () => {
   const inputText = encoderInput.value;
   const type = encoderType.value;
 
@@ -118,9 +160,7 @@ encoderRunBtn.addEventListener("click", async () => {
         result = base91Decode(inputText);
         break;
       case "gzip-compress":
-        console.log(inputText);
         result = await gzipCompress(inputText);
-        console.log(result);
         break;
       case "gzip-decompress":
         result = await gzipDecompress(inputText);
@@ -148,7 +188,7 @@ encoderRunBtn.addEventListener("click", async () => {
 });
 
 // Formatter functionality
-formatterValidateBtn.addEventListener("click", () => {
+formatterValidateBtn?.addEventListener("click", () => {
   const inputText = formatterInput.value;
   const type = formatterType.value;
 
@@ -169,7 +209,7 @@ formatterValidateBtn.addEventListener("click", () => {
   }
 });
 
-formatterFormatBtn.addEventListener("click", () => {
+formatterFormatBtn?.addEventListener("click", () => {
   const inputText = formatterInput.value;
   const type = formatterType.value;
 
@@ -189,7 +229,7 @@ formatterFormatBtn.addEventListener("click", () => {
 });
 
 // Validator functionality
-validatorRunBtn.addEventListener("click", () => {
+validatorRunBtn?.addEventListener("click", () => {
   const inputText = validatorInput.value;
   const type = validatorType.value;
 

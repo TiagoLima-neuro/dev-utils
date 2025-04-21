@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dev Utils</title>
+    <title>Encoders & Compressors</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -12,18 +12,17 @@
       <p class="subtitle">Funções 100% client-side para uso interno</p>
     </header>
 
-    <main>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="encoders">
-          Codificadores & Compressores
-        </button>
-        <button class="tab-btn" data-tab="formatters">Formatadores</button>
-        <button class="tab-btn" data-tab="validators">Validadores</button>
-        <button class="tab-btn" data-tab="parquet">Visualizador</button>
-      </div>
-
-      <div class="tab-content">
-        <!-- Encoders & Compressors -->
+    <div class="wrapper">
+      <aside class="sidebar">
+        <a href="index.html" class="sidebar-link active"
+          >Codificadores & Compressores</a
+        >
+        <a href="formatters.html" class="sidebar-link">Formatadores</a>
+        <a href="validators.html" class="sidebar-link">Validadores</a>
+        <a href="parquet.html" class="sidebar-link">Visualizador</a>
+        <a href="diff.html" class="sidebar-link">Diff</a>
+      </aside>
+      <main>
         <div class="tab-pane active" id="encoders">
           <div class="form-group">
             <label for="encoder-type">Selecione a Operação:</label>
@@ -55,92 +54,13 @@
           </div>
           <button id="encoder-run" class="primary-btn">Executar</button>
         </div>
-
-        <!-- Formatters -->
-        <div class="tab-pane" id="formatters">
-          <div class="form-group">
-            <label for="formatter-type">Selecione o Formato:</label>
-            <select id="formatter-type">
-              <option value="json">JSON</option>
-            </select>
-          </div>
-          <div class="input-output">
-            <div class="form-group">
-              <label for="formatter-input">Input:</label>
-              <textarea
-                id="formatter-input"
-                placeholder="Enter text to format"
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label for="formatter-output">Output:</label>
-              <textarea id="formatter-output" readonly></textarea>
-            </div>
-          </div>
-          <div class="btn-group">
-            <button id="formatter-validate" class="primary-btn">Validar</button>
-            <button id="formatter-format" class="primary-btn">Formatar</button>
-          </div>
-        </div>
-
-        <!-- Validators -->
-        <div class="tab-pane" id="validators">
-          <div class="form-group">
-            <label for="validator-type">Selecione o Validador:</label>
-            <select id="validator-type">
-              <option value="cpf">CPF</option>
-              <option value="cnpj">CNPJ</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="validator-input">Input:</label>
-            <input
-              type="text"
-              id="validator-input"
-              placeholder="Enter value to validate"
-            />
-          </div>
-          <button id="validator-run" class="primary-btn">Validar</button>
-          <div class="validator-result" id="validator-result"></div>
-        </div>
-
-        <!-- Parquet Visualizer -->
-        <div class="tab-pane" id="parquet">
-          <div class="form-group">
-            <label for="parquet-file">Arquivo Parquet:</label>
-            <input type="file" id="parquet-file" />
-          </div>
-          <div class="form-group">
-            <label for="parquet-columns"
-              >Colunas (separadas por vírgula):</label
-            >
-            <input
-              type="text"
-              id="parquet-columns"
-              placeholder="coluna1, coluna2, coluna3"
-            />
-          </div>
-          <div class="form-group row">
-            <div class="col">
-              <label for="parquet-row-start">Linha inicial:</label>
-              <input type="number" id="parquet-row-start" min="0" value="0" />
-            </div>
-            <div class="col">
-              <label for="parquet-row-end">Linha final:</label>
-              <input type="number" id="parquet-row-end" min="1" value="20" />
-            </div>
-          </div>
-          <button id="parquet-load" class="primary-btn">Carregar Dados</button>
-          <div id="parquet-data-container" class="parquet-container"></div>
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
 
     <footer>
       <p>100% Client-side - Nenhum dado é enviado para servidores</p>
     </footer>
 
     <script type="module" src="app.js"></script>
-    <script type="module" src="parquet-view.js"></script>
   </body>
 </html>
