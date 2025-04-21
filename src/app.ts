@@ -82,9 +82,12 @@ const diffInputOld = document.getElementById(
 const diffInputNew = document.getElementById(
   "diff-input-new"
 ) as HTMLTextAreaElement;
-const diffOutput = document.getElementById(
-  "diff-output"
-) as HTMLTextAreaElement;
+const diffOutputOld = document.getElementById(
+  "diff-output-old"
+) as HTMLDivElement;
+const diffOutputNew = document.getElementById(
+  "diff-output-new"
+) as HTMLDivElement;
 const diffRunBtn = document.getElementById("diff-run") as HTMLButtonElement;
 
 // Parquet functionality
@@ -118,15 +121,39 @@ diffRunBtn.addEventListener("click", () => {
     const diffResult = diffLines(oldText, newText, {
       ignoreNewlineAtEof: true,
     });
-    console.log(diffResult);
-    let output = "";
+
+    diffOutputOld.innerHTML = "";
+    diffOutputNew.innerHTML = "";
+
     diffResult.forEach((part: { added?: any; removed?: any; value: any }) => {
-      const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
-      output += `${prefix}${part.value}\n`;
+      if (part.added) {
+        const lineNew = document.createElement("div");
+        lineNew.classList.add("diff-added");
+        lineNew.textContent = part.value;
+        diffOutputNew.appendChild(lineNew);
+      } else if (part.removed) {
+        const lineOld = document.createElement("div");
+        lineOld.classList.add("diff-removed");
+        lineOld.textContent = part.value;
+        diffOutputOld.appendChild(lineOld);
+      } else {
+        const lineOld = document.createElement("div");
+        lineOld.classList.add("diff-unchanged");
+        lineOld.textContent = part.value;
+        diffOutputOld.appendChild(lineOld);
+        const lineNew = document.createElement("div");
+        lineNew.classList.add("diff-unchanged");
+        lineNew.textContent = part.value;
+        diffOutputNew.appendChild(lineNew);
+      }
     });
-    diffOutput.value = output;
   } catch (error) {
-    diffOutput.value = `Error: ${(error as Error).message}`;
+    diffOutputOld.innerHTML = `<div class="diff-error">Error: ${
+      (error as Error).message
+    }</div>`;
+    diffOutputNew.innerHTML = `<div class="diff-error">Error: ${
+      (error as Error).message
+    }</div>`;
   }
 });
 
@@ -152,9 +179,7 @@ encoderRunBtn.addEventListener("click", async () => {
         result = base91Decode(inputText);
         break;
       case "gzip-compress":
-        console.log(inputText);
         result = await gzipCompress(inputText);
-        console.log(result);
         break;
       case "gzip-decompress":
         result = await gzipDecompress(inputText);

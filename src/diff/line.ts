@@ -47,7 +47,6 @@ lineDiff.tokenize = function (
     }
   }
 
-  console.log("retLines", retLines);
   return retLines;
 };
 
@@ -82,9 +81,6 @@ lineDiff.equals = function (
       right = right.slice(0, -1);
     }
   }
-  console.log("left", left);
-  console.log("right", right);
-  console.log("options", options);
   return Diff.prototype.equals.call(this, left, right, options);
 };
 
