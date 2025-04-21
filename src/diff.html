@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diff</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Dev Utils</h1>
+      <p class="subtitle">Funções 100% client-side para uso interno</p>
+    </header>
+
+    <div class="wrapper">
+      <aside class="sidebar">
+        <a href="index.html" class="sidebar-link"
+          >Codificadores & Compressores</a
+        >
+        <a href="formatters.html" class="sidebar-link">Formatadores</a>
+        <a href="validators.html" class="sidebar-link">Validadores</a>
+        <a href="parquet.html" class="sidebar-link">Visualizador</a>
+        <a href="diff.html" class="sidebar-link active">Diff</a>
+      </aside>
+      <main>
+        <div class="tab-pane active" id="diff">
+          <div class="input-output">
+            <div class="form-group">
+              <label for="diff-input-old">Original:</label>
+              <textarea
+                id="diff-input-old"
+                placeholder="Enter original text"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="diff-input-new">Modificado:</label>
+              <textarea
+                id="diff-input-new"
+                placeholder="Enter modified text"
+              ></textarea>
+            </div>
+          </div>
+          <button id="diff-run" class="primary-btn">Comparar</button>
+          <div class="diff-output-container">
+            <div class="diff-output-old" id="diff-output-old"></div>
+            <div class="diff-output-new" id="diff-output-new"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer>
+      <p>100% Client-side - Nenhum dado é enviado para servidores</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

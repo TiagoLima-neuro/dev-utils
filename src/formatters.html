@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formatadores</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Dev Utils</h1>
+      <p class="subtitle">Funções 100% client-side para uso interno</p>
+    </header>
+    <div class="wrapper">
+      <aside class="sidebar">
+        <a href="index.html" class="sidebar-link"
+          >Codificadores & Compressores</a
+        >
+        <a href="formatters.html" class="sidebar-link active">Formatadores</a>
+        <a href="validators.html" class="sidebar-link">Validadores</a>
+        <a href="parquet.html" class="sidebar-link">Visualizador</a>
+        <a href="diff.html" class="sidebar-link">Diff</a>
+      </aside>
+      <main>
+        <div class="tab-pane active" id="formatters">
+          <div class="form-group">
+            <label for="formatter-type">Selecione o Formato:</label>
+            <select id="formatter-type">
+              <option value="json">JSON</option>
+            </select>
+          </div>
+          <div class="input-output">
+            <div class="form-group">
+              <label for="formatter-input">Input:</label>
+              <textarea
+                id="formatter-input"
+                placeholder="Enter text to format"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="formatter-output">Output:</label>
+              <textarea id="formatter-output" readonly></textarea>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button id="formatter-validate" class="primary-btn">Validar</button>
+            <button id="formatter-format" class="primary-btn">Formatar</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <p>100% Client-side - Nenhum dado é enviado para servidores</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

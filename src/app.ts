@@ -91,29 +91,10 @@ const diffOutputNew = document.getElementById(
 const diffRunBtn = document.getElementById("diff-run") as HTMLButtonElement;
 
 // Parquet functionality
-parquetLoadBtn.addEventListener("click", loadParquetFromUI);
-
-// Tab functionality
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const tabId = button.getAttribute("data-tab");
-
-    // Update active tab button
-    tabButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-
-    // Update active tab pane
-    tabPanes.forEach((pane) => {
-      pane.classList.remove("active");
-      if (pane.id === tabId) {
-        pane.classList.add("active");
-      }
-    });
-  });
-});
+parquetLoadBtn?.addEventListener("click", loadParquetFromUI);
 
 // Diff functionality
-diffRunBtn.addEventListener("click", () => {
+diffRunBtn?.addEventListener("click", () => {
   const oldText = diffInputOld.value;
   const newText = diffInputNew.value;
 
@@ -158,7 +139,7 @@ diffRunBtn.addEventListener("click", () => {
 });
 
 // Encoder functionality
-encoderRunBtn.addEventListener("click", async () => {
+encoderRunBtn?.addEventListener("click", async () => {
   const inputText = encoderInput.value;
   const type = encoderType.value;
 
@@ -207,7 +188,7 @@ encoderRunBtn.addEventListener("click", async () => {
 });
 
 // Formatter functionality
-formatterValidateBtn.addEventListener("click", () => {
+formatterValidateBtn?.addEventListener("click", () => {
   const inputText = formatterInput.value;
   const type = formatterType.value;
 
@@ -228,7 +209,7 @@ formatterValidateBtn.addEventListener("click", () => {
   }
 });
 
-formatterFormatBtn.addEventListener("click", () => {
+formatterFormatBtn?.addEventListener("click", () => {
   const inputText = formatterInput.value;
   const type = formatterType.value;
 
@@ -248,7 +229,7 @@ formatterFormatBtn.addEventListener("click", () => {
 });
 
 // Validator functionality
-validatorRunBtn.addEventListener("click", () => {
+validatorRunBtn?.addEventListener("click", () => {
   const inputText = validatorInput.value;
   const type = validatorType.value;
 
