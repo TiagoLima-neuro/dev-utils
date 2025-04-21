@@ -7,7 +7,7 @@
     "start:dev": "tsc --noCheck && npm run copy-files && http-server dist -p 8080",
     "start": "http-server dist -p 8080",
     "build": "tsc --noCheck && npm run copy-files",
-    "copy-files": "cp -r src/*.html src/*.css src/wasm src/wasm/**/*.wasm dist/",
+    "copy-files": "cp -r src/*.html src/*.css src/wasm src/wasm/**/*.wasm src/assets dist/",
     "test": "tsx --test tests/*.test.ts"
   },
   "author": "",
