@@ -19,6 +19,7 @@ import {
 } from "./formatters/index.js";
 import { validateCPF, validateCNPJ } from "./validators/brazilian.js";
 import { loadParquetFromUI } from "./parquet-view.js";
+import { diffLines } from "./diff/line.js";
 
 // DOM Elements
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -74,6 +75,18 @@ const parquetLoadBtn = document.getElementById(
   "parquet-load"
 ) as HTMLButtonElement;
 
+// Diff elements
+const diffInputOld = document.getElementById(
+  "diff-input-old"
+) as HTMLTextAreaElement;
+const diffInputNew = document.getElementById(
+  "diff-input-new"
+) as HTMLTextAreaElement;
+const diffOutput = document.getElementById(
+  "diff-output"
+) as HTMLTextAreaElement;
+const diffRunBtn = document.getElementById("diff-run") as HTMLButtonElement;
+
 // Parquet functionality
 parquetLoadBtn.addEventListener("click", loadParquetFromUI);
 
@@ -94,6 +107,27 @@ tabButtons.forEach((button) => {
       }
     });
   });
+});
+
+// Diff functionality
+diffRunBtn.addEventListener("click", () => {
+  const oldText = diffInputOld.value;
+  const newText = diffInputNew.value;
+
+  try {
+    const diffResult = diffLines(oldText, newText, {
+      ignoreNewlineAtEof: true,
+    });
+    console.log(diffResult);
+    let output = "";
+    diffResult.forEach((part: { added?: any; removed?: any; value: any }) => {
+      const prefix = part.added ? "+ " : part.removed ? "- " : "  ";
+      output += `${prefix}${part.value}\n`;
+    });
+    diffOutput.value = output;
+  } catch (error) {
+    diffOutput.value = `Error: ${(error as Error).message}`;
+  }
 });
 
 // Encoder functionality

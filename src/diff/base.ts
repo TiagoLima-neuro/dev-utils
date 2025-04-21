@@ -87,6 +87,8 @@ Diff.prototype = {
     oldString = this.removeEmpty(this.tokenize(oldString, options));
     newString = this.removeEmpty(this.tokenize(newString, options));
 
+    debugger;
+
     let newLen = newString.length,
       oldLen = oldString.length;
     let editLength = 1;

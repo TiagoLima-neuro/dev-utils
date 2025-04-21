@@ -1,4 +1,4 @@
-import Diff from "./base";
+import Diff from "./base.js";
 
 function generateOptions(
   options: { [x: string]: any; hasOwnProperty: (arg0: string) => any },
@@ -47,6 +47,7 @@ lineDiff.tokenize = function (
     }
   }
 
+  console.log("retLines", retLines);
   return retLines;
 };
 
@@ -81,6 +82,9 @@ lineDiff.equals = function (
       right = right.slice(0, -1);
     }
   }
+  console.log("left", left);
+  console.log("right", right);
+  console.log("options", options);
   return Diff.prototype.equals.call(this, left, right, options);
 };
 
