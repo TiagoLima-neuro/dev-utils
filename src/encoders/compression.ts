@@ -9,9 +9,9 @@ async function loadZstd() {
   return new Promise<void>((resolve, reject) => {
     const script = document.createElement("script");
     // Use a path that works both locally and when deployed
-    const basePath = window.location.pathname.includes('/dev-utils') 
-      ? '/dev-utils' 
-      : '';
+    const basePath = window.location.pathname.includes("/dev-utils")
+      ? "/dev-utils"
+      : "";
     script.src = `${basePath}/wasm/zstd/zstd.js`;
     script.onload = () => {
       zstdLoaded = true;
@@ -107,7 +107,7 @@ export async function zstdDecompress(
     const compressedDataPtr = Module._malloc(compressedData.length);
     Module.HEAPU8.set(compressedData, compressedDataPtr);
 
-    const decompressedBound = compressedData.length * 3; // a rough estimate
+    const decompressedBound = compressedData.length * 10; // a rough estimate
     const outPtr = Module._malloc(decompressedBound);
 
     const decompressedSize = Module._ZSTD_decompress(
