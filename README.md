@@ -63,3 +63,30 @@ After building, you can deploy the contents of the `dist` directory to an S3 buc
 - No external runtime dependencies
 - ES2020 module format
 - Compatible with all modern browsers
+
+## AI Enhancement Roadmap
+
+### Planned Feature: WebLLM Integration for Parquet Query Generation
+
+**Runtime Cost**: $0 (100% client-side, no API calls)
+
+**Development Investment**:
+
+| Phase | Duration | Effort | Description |
+|-------|----------|--------|--------------|
+| Foundation | 1 week | 20 hours | WebLLM integration, WebGPU detection, model loading |
+| Core Features | 1 week | 25 hours | Schema extraction, query generation, UI integration |
+| Polish & UX | 1 week | 15 hours | Error handling, loading states, performance optimization |
+| Documentation | 0.5 weeks | 8 hours | User guides, system requirements, deployment updates |
+| **Total** | **3.5 weeks** | **68 hours** | **Complete AI-powered parquet querying** |
+
+**Value Proposition**:
+- Transform complex filter building into natural language queries
+- Maintain zero operational costs and privacy-first architecture
+- Enable advanced data analysis without external dependencies
+- Target ROI: 10x improvement in parquet query creation speed
+
+**System Requirements** (for AI features):
+- WebGPU-compatible browser (Chrome 113+, Edge 113+)
+- 8GB+ RAM, 2GB+ available storage
+- Modern GPU with 2GB+ VRAM
