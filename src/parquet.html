@@ -49,6 +49,30 @@
               <input type="number" id="parquet-row-end" min="1" value="20" />
             </div>
           </div>
+          <div class="form-group">
+            <label for="parquet-filter-column">Filtro - Coluna:</label>
+            <input type="text" id="parquet-filter-column" placeholder="nome_da_coluna" />
+          </div>
+          <div class="form-group row">
+            <div class="col">
+              <label for="parquet-filter-operator">Operador:</label>
+              <select id="parquet-filter-operator">
+                <option value="">Sem filtro</option>
+                <option value="equals">Igual a</option>
+                <option value="not-equals">Diferente de</option>
+                <option value="is-null">É nulo</option>
+                <option value="not-null">Não é nulo</option>
+                <option value="gt">Maior que</option>
+                <option value="gte">Maior ou igual</option>
+                <option value="lt">Menor que</option>
+                <option value="lte">Menor ou igual</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="parquet-filter-value">Valor:</label>
+              <input type="text" id="parquet-filter-value" placeholder="valor" />
+            </div>
+          </div>
           <button id="parquet-load" class="primary-btn">Carregar Dados</button>
           <div id="parquet-data-container" class="parquet-container"></div>
         </div>
