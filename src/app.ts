@@ -12,6 +12,12 @@ import {
   zstdDecompress,
 } from "./encoders/compression.js";
 import {
+  getEncoderFormatLabel,
+  isHashFormat,
+  type EncoderFormat,
+  type EncoderMode,
+} from "./encoders/workflow.js";
+import {
   validateJson,
   formatJson,
   validateYaml,
@@ -26,9 +32,12 @@ const tabButtons = document.querySelectorAll(".tab-btn");
 const tabPanes = document.querySelectorAll(".tab-pane");
 
 // Encoder elements
-const encoderType = document.getElementById(
-  "encoder-type"
+const encoderFormat = document.getElementById(
+  "encoder-format"
 ) as HTMLSelectElement;
+const encoderModeButtons = Array.from(
+  document.querySelectorAll<HTMLButtonElement>("#encoder-mode-controls [data-mode]")
+);
 const encoderInput = document.getElementById(
   "encoder-input"
 ) as HTMLTextAreaElement;
@@ -37,6 +46,9 @@ const encoderOutput = document.getElementById(
 ) as HTMLTextAreaElement;
 const encoderRunBtn = document.getElementById(
   "encoder-run"
+) as HTMLButtonElement;
+const encoderSwapBtn = document.getElementById(
+  "encoder-swap"
 ) as HTMLButtonElement;
 
 // Formatter elements
@@ -93,6 +105,40 @@ const diffRunBtn = document.getElementById("diff-run") as HTMLButtonElement;
 // Parquet functionality
 parquetLoadBtn?.addEventListener("click", loadParquetFromUI);
 
+let currentEncoderMode: EncoderMode = "encode";
+
+function getCurrentEncoderFormat(): EncoderFormat {
+  return encoderFormat.value as EncoderFormat;
+}
+
+function updateEncoderUi() {
+  const format = getCurrentEncoderFormat();
+  const isHash = isHashFormat(format);
+
+  if (isHash) {
+    currentEncoderMode = "encode";
+  }
+
+  encoderModeButtons.forEach((button) => {
+    const buttonMode = button.dataset.mode as EncoderMode;
+    const isActive = buttonMode === currentEncoderMode;
+
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+    button.disabled = isHash && buttonMode === "decode";
+  });
+
+  encoderRunBtn.textContent = isHash
+    ? `Gerar ${getEncoderFormatLabel(format)}`
+    : "Executar";
+  encoderInput.placeholder = isHash
+    ? "Texto para gerar o hash"
+    : currentEncoderMode === "encode"
+      ? "Texto para codificar"
+      : `${getEncoderFormatLabel(format)} para decodificar`;
+  encoderSwapBtn.disabled = encoderOutput.value.trim().length === 0;
+}
+
 // Diff functionality
 diffRunBtn?.addEventListener("click", () => {
   const oldText = diffInputOld.value;
@@ -139,51 +185,91 @@ diffRunBtn?.addEventListener("click", () => {
 });
 
 // Encoder functionality
+encoderModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentEncoderMode = button.dataset.mode as EncoderMode;
+    updateEncoderUi();
+  });
+});
+
+encoderFormat?.addEventListener("change", () => {
+  currentEncoderMode = "encode";
+  updateEncoderUi();
+});
+
+encoderSwapBtn?.addEventListener("click", () => {
+  if (!encoderOutput.value.trim()) {
+    return;
+  }
+
+  if (isHashFormat(getCurrentEncoderFormat())) {
+    encoderInput.value = encoderOutput.value;
+    encoderOutput.value = "";
+  } else {
+    const nextInput = encoderOutput.value;
+    const nextOutput = encoderInput.value;
+
+    encoderInput.value = nextInput;
+    encoderOutput.value = nextOutput;
+    currentEncoderMode = currentEncoderMode === "encode" ? "decode" : "encode";
+  }
+
+  updateEncoderUi();
+  encoderInput.focus();
+});
+
+encoderInput?.addEventListener("input", () => {
+  updateEncoderUi();
+});
+
 encoderRunBtn?.addEventListener("click", async () => {
   const inputText = encoderInput.value;
-  const type = encoderType.value;
+  const format = getCurrentEncoderFormat();
 
   try {
     let result = "";
+    const resolvedMode = isHashFormat(format) ? "hash" : currentEncoderMode;
 
-    switch (type) {
-      case "base64-encode":
+    switch (`${format}:${resolvedMode}`) {
+      case "base64:encode":
         result = base64Encode(inputText);
         break;
-      case "base64-decode":
+      case "base64:decode":
         result = base64Decode(inputText);
         break;
-      case "base91-encode":
+      case "base91:encode":
         result = base91Encode(inputText);
         break;
-      case "base91-decode":
+      case "base91:decode":
         result = base91Decode(inputText);
         break;
-      case "gzip-compress":
+      case "gzip:encode":
         result = await gzipCompress(inputText);
         break;
-      case "gzip-decompress":
+      case "gzip:decode":
         result = await gzipDecompress(inputText);
         break;
-      case "zstd-compress":
+      case "zstd:encode":
         result = await zstdCompress(inputText);
         break;
-      case "zstd-decompress":
+      case "zstd:decode":
         result = await zstdDecompress(inputText);
         break;
-      case "sha256-base64":
+      case "sha256-base64:hash":
         result = await sha256(inputText, "base64");
         break;
-      case "sha256-hex":
+      case "sha256-hex:hash":
         result = await sha256(inputText, "hex");
         break;
       default:
-        throw new Error("Invalid encoder type");
+        throw new Error("Invalid encoder configuration");
     }
 
     encoderOutput.value = result;
+    updateEncoderUi();
   } catch (error) {
     encoderOutput.value = `Error: ${(error as Error).message}`;
+    updateEncoderUi();
   }
 });
 
@@ -252,3 +338,5 @@ validatorRunBtn?.addEventListener("click", () => {
     validatorResult.className = "validator-result invalid";
   }
 });
+
+updateEncoderUi();

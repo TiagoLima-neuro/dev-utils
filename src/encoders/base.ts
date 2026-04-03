@@ -3,10 +3,26 @@
  * Client-side only implementation without external dependencies
  */
 
+function toBase64(bytes: Uint8Array): string {
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
+
+function fromBase64(input: string): Uint8Array {
+  const normalizedInput = input.replace(/\s+/g, "");
+  const binary = atob(normalizedInput);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+}
+
 // Base64 functions
 export function base64Encode(input: string): string {
   try {
-    return btoa(input);
+    return toBase64(new TextEncoder().encode(input));
   } catch (error) {
     throw new Error("Invalid input for Base64 encoding");
   }
@@ -14,7 +30,7 @@ export function base64Encode(input: string): string {
 
 export function base64Decode(input: string): string {
   try {
-    return atob(input);
+    return new TextDecoder("utf-8", { fatal: true }).decode(fromBase64(input));
   } catch (error) {
     throw new Error("Invalid Base64 string");
   }
@@ -108,8 +124,7 @@ export async function sha256(
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
 
   if (outputType === "base64") {
-    const hashArray = new Uint8Array(hashBuffer);
-    return btoa(String.fromCharCode(...hashArray));
+    return toBase64(new Uint8Array(hashBuffer));
   }
 
   // Hex output

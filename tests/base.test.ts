@@ -40,6 +40,14 @@ test("Base64 Decode", (t) => {
   );
 });
 
+test("Base64 handles unicode text", (t) => {
+  const input = "Olá, 世界 👋";
+  const encoded = base64Encode(input);
+
+  assert.strictEqual(encoded, "T2zDoSwg5LiW55WMIPCfkYs=");
+  assert.strictEqual(base64Decode(encoded), input);
+});
+
 // Tests for Base91
 test("Base91 Encode and Decode", (t) => {
   const testCases = [
