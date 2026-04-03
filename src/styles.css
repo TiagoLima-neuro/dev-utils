@@ -199,6 +199,13 @@ textarea {
 
 .input-output {
   display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.encoder-input-output {
+  display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   margin-bottom: 1rem;
   gap: 8px;

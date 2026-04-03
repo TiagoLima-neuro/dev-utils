@@ -341,4 +341,12 @@ validatorRunBtn?.addEventListener("click", () => {
   }
 });
 
-updateEncoderUi();
+if (
+  encoderFormat &&
+  encoderInput &&
+  encoderOutput &&
+  encoderRunBtn &&
+  encoderSwapBtn
+) {
+  updateEncoderUi();
+}
