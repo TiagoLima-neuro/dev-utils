@@ -12,6 +12,7 @@ import {
   base64Decode,
   base91Decode,
   base91Encode,
+  md5sum,
   sha256,
 } from "../src/encoders/base";
 
@@ -38,6 +39,14 @@ test("Base64 Decode", (t) => {
     base64Decode("U3BlY2lhbCBjaGFyczogIUAjJCVeJiooKQ=="),
     "Special chars: !@#$%^&*()"
   );
+});
+
+test("Base64 handles unicode text", (t) => {
+  const input = "Olá, 世界 👋";
+  const encoded = base64Encode(input);
+
+  assert.strictEqual(encoded, "T2zDoSwg5LiW55WMIPCfkYs=");
+  assert.strictEqual(base64Decode(encoded), input);
 });
 
 // Tests for Base91
@@ -67,6 +76,20 @@ test("Base91 Specific Encode Cases", (t) => {
     ),
     "This is a longer text to ensure proper encoding and decoding"
   );
+});
+
+test("MD5 checksum", (t) => {
+  assert.strictEqual(md5sum("Hello, World!"), "65a8e27d8879283831b664bd8b7f0ad4");
+  assert.strictEqual(md5sum(""), "d41d8cd98f00b204e9800998ecf8427e");
+  assert.strictEqual(md5sum("12345"), "827ccb0eea8a706c4c34a16891f84e7b");
+  assert.strictEqual(
+    md5sum("Special chars: !@#$%^&*()"),
+    "a67d8948c116b907841e7b09a1cc59c9"
+  );
+});
+
+test("MD5 handles unicode text", (t) => {
+  assert.strictEqual(md5sum("Olá, 世界 👋"), "6dd5c70ef01e19c994195943658a9aff");
 });
 
 test("SHA256 Base64 Encode", async (t) => {

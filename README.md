@@ -7,6 +7,7 @@ A secure, client-side only developer utility application for internal use. This 
 ### Encoders & Compressors
 - Base64 encoding and decoding
 - Base91 encoding and decoding
+- MD5 checksum generation (`md5sum` style hex output)
 - GZIP compression and decompression
 - ZSTD compression and decompression (simplified implementation)
 
@@ -57,9 +58,107 @@ After building, you can deploy the contents of the `dist` directory to an S3 buc
    aws s3 sync dist/ s3://your-bucket-name/ --acl public-read
    ```
 
+## Architecture
+
+```mermaid
+graph TB
+    subgraph "Browser Environment"
+        UI["🖥️ User Interface<br/>HTML + CSS + TypeScript"]
+        
+        subgraph "Core Modules"
+            ENC["🔐 Encoders<br/>Base64, Base91, MD5, SHA256"]
+            COMP["📦 Compressors<br/>GZIP, ZSTD"]
+            FMT["📝 Formatters<br/>JSON, YAML"]
+            VAL["✅ Validators<br/>CPF, CNPJ"]
+            PARQ["📊 Parquet Viewer<br/>File Parser"]
+            DIFF["🔍 Text Diff<br/>Comparison"]
+        end
+        
+        subgraph "Browser APIs"
+            CRYPTO["🔒 crypto.subtle"]
+            STREAMS["🌊 CompressionStream"]
+            WASM["⚡ WebAssembly"]
+        end
+        
+        subgraph "WASM Modules"
+            ZSTD_WASM["📦 ZSTD.wasm<br/>High-performance compression"]
+        end
+    end
+    
+    subgraph "Data Flow"
+        INPUT["📥 User Input<br/>Text, Files"]
+        OUTPUT["📤 Processed Output<br/>Encoded, Formatted, Validated"]
+    end
+    
+    INPUT --> UI
+    UI --> ENC
+    UI --> COMP
+    UI --> FMT
+    UI --> VAL
+    UI --> PARQ
+    UI --> DIFF
+    
+    ENC --> CRYPTO
+    COMP --> STREAMS
+    COMP --> ZSTD_WASM
+    ZSTD_WASM --> WASM
+    
+    ENC --> OUTPUT
+    COMP --> OUTPUT
+    FMT --> OUTPUT
+    VAL --> OUTPUT
+    PARQ --> OUTPUT
+    DIFF --> OUTPUT
+    
+    classDef security fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef processing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef api fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef data fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class ENC,VAL security
+    class COMP,FMT,PARQ,DIFF processing
+    class CRYPTO,STREAMS,WASM api
+    class INPUT,OUTPUT data
+```
+
+### Key Architectural Principles
+
+- **Zero Trust Network**: No external API calls or data transmission
+- **Client-Side Only**: All processing happens in the browser
+- **Modular Design**: Independent utility modules with clear separation
+- **Performance**: WebAssembly for compute-intensive operations
+- **Security**: Browser's built-in crypto APIs for hashing
+
 ## Technical Details
 
 - Written in TypeScript for type safety
 - No external runtime dependencies
 - ES2020 module format
 - Compatible with all modern browsers
+
+## AI Enhancement Roadmap
+
+### Planned Feature: WebLLM Integration for Parquet Query Generation
+
+**Runtime Cost**: $0 (100% client-side, no API calls)
+
+**Development Investment**:
+
+| Phase | Duration | Effort | Description |
+|-------|----------|--------|--------------|
+| Foundation | 1 week | 20 hours | WebLLM integration, WebGPU detection, model loading |
+| Core Features | 1 week | 25 hours | Schema extraction, query generation, UI integration |
+| Polish & UX | 1 week | 15 hours | Error handling, loading states, performance optimization |
+| Documentation | 0.5 weeks | 8 hours | User guides, system requirements, deployment updates |
+| **Total** | **3.5 weeks** | **68 hours** | **Complete AI-powered parquet querying** |
+
+**Value Proposition**:
+- Transform complex filter building into natural language queries
+- Maintain zero operational costs and privacy-first architecture
+- Enable advanced data analysis without external dependencies
+- Target ROI: 10x improvement in parquet query creation speed
+
+**System Requirements** (for AI features):
+- WebGPU-compatible browser (Chrome 113+, Edge 113+)
+- 8GB+ RAM, 2GB+ available storage
+- Modern GPU with 2GB+ VRAM

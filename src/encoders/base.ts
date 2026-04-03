@@ -3,10 +3,26 @@
  * Client-side only implementation without external dependencies
  */
 
+function toBase64(bytes: Uint8Array): string {
+  let binary = "";
+
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+}
+
+function fromBase64(input: string): Uint8Array {
+  const normalizedInput = input.replace(/\s+/g, "");
+  const binary = atob(normalizedInput);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+}
+
 // Base64 functions
 export function base64Encode(input: string): string {
   try {
-    return btoa(input);
+    return toBase64(new TextEncoder().encode(input));
   } catch (error) {
     throw new Error("Invalid input for Base64 encoding");
   }
@@ -14,7 +30,7 @@ export function base64Encode(input: string): string {
 
 export function base64Decode(input: string): string {
   try {
-    return atob(input);
+    return new TextDecoder("utf-8", { fatal: true }).decode(fromBase64(input));
   } catch (error) {
     throw new Error("Invalid Base64 string");
   }
@@ -98,6 +114,109 @@ export function base91Decode(input: string): string {
   return decoder.decode(new Uint8Array(result));
 }
 
+function leftRotate(value: number, amount: number): number {
+  return ((value << amount) | (value >>> (32 - amount))) >>> 0;
+}
+
+function toLittleEndianHex(word: number): string {
+  const bytes = [
+    word & 0xff,
+    (word >>> 8) & 0xff,
+    (word >>> 16) & 0xff,
+    (word >>> 24) & 0xff,
+  ];
+
+  return bytes.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+const MD5_SHIFT_AMOUNTS = [
+  7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+  5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+  4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+  6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
+];
+
+const MD5_TABLE = Array.from({ length: 64 }, (_, index) =>
+  Math.floor(Math.abs(Math.sin(index + 1)) * 0x100000000) >>> 0
+);
+
+export function md5sum(input: string): string {
+  const source = new TextEncoder().encode(input);
+  const paddedLength = (((source.length + 8) >>> 6) + 1) * 64;
+  const padded = new Uint8Array(paddedLength);
+  const bitLength = BigInt(source.length) * 8n;
+
+  padded.set(source);
+  padded[source.length] = 0x80;
+
+  for (let index = 0; index < 8; index++) {
+    padded[padded.length - 8 + index] = Number(
+      (bitLength >> BigInt(index * 8)) & 0xffn
+    );
+  }
+
+  let a0 = 0x67452301;
+  let b0 = 0xefcdab89;
+  let c0 = 0x98badcfe;
+  let d0 = 0x10325476;
+
+  for (let chunkOffset = 0; chunkOffset < padded.length; chunkOffset += 64) {
+    const words = new Uint32Array(16);
+
+    for (let wordIndex = 0; wordIndex < 16; wordIndex++) {
+      const byteOffset = chunkOffset + wordIndex * 4;
+      words[wordIndex] =
+        padded[byteOffset] |
+        (padded[byteOffset + 1] << 8) |
+        (padded[byteOffset + 2] << 16) |
+        (padded[byteOffset + 3] << 24);
+    }
+
+    let a = a0;
+    let b = b0;
+    let c = c0;
+    let d = d0;
+
+    for (let index = 0; index < 64; index++) {
+      let f = 0;
+      let g = 0;
+
+      if (index < 16) {
+        f = (b & c) | (~b & d);
+        g = index;
+      } else if (index < 32) {
+        f = (d & b) | (~d & c);
+        g = (5 * index + 1) % 16;
+      } else if (index < 48) {
+        f = b ^ c ^ d;
+        g = (3 * index + 5) % 16;
+      } else {
+        f = c ^ (b | ~d);
+        g = (7 * index) % 16;
+      }
+
+      const nextValue = (a + f + MD5_TABLE[index] + words[g]) >>> 0;
+
+      a = d;
+      d = c;
+      c = b;
+      b = (b + leftRotate(nextValue, MD5_SHIFT_AMOUNTS[index])) >>> 0;
+    }
+
+    a0 = (a0 + a) >>> 0;
+    b0 = (b0 + b) >>> 0;
+    c0 = (c0 + c) >>> 0;
+    d0 = (d0 + d) >>> 0;
+  }
+
+  return (
+    toLittleEndianHex(a0) +
+    toLittleEndianHex(b0) +
+    toLittleEndianHex(c0) +
+    toLittleEndianHex(d0)
+  );
+}
+
 // SHA256 Hash function
 export async function sha256(
   input: string,
@@ -108,8 +227,7 @@ export async function sha256(
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
 
   if (outputType === "base64") {
-    const hashArray = new Uint8Array(hashBuffer);
-    return btoa(String.fromCharCode(...hashArray));
+    return toBase64(new Uint8Array(hashBuffer));
   }
 
   // Hex output
