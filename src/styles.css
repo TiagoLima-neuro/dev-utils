@@ -484,56 +484,68 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .input-output,
-  .form-group.row {
-    grid-template-columns: 1fr;
+  header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.25rem 0.75rem;
+    padding: 0.75rem 1rem;
   }
 
-  .segmented-control,
-  .btn-group {
-    display: flex;
+  .wrapper {
     flex-direction: column;
+    min-width: 0;
+  }
+
+  .input-output,
+  .form-group.row {
+  .form-group.row,
+  .encoder-input-output {
+    grid-template-columns: 1fr;
   }
 
   aside.sidebar {
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border-right: none;
     border-bottom: 1px solid var(--border-solid);
     padding: 0.35rem 0.25rem;
+    padding: 0.35rem 0.5rem;
   }
 
   .sidebar-link {
+    flex: 0 0 auto;
+    white-space: nowrap;
     border-left: none;
     border-bottom: 2px solid transparent;
     padding: 0.35rem 0.65rem;
-    font-size: 0.8rem;
-  }
-
-  .sidebar-link.active {
-    border-bottom-color: var(--primary);
-    border-left-color: transparent;
-    background-color: rgba(119, 101, 246, 0.09);
   }
 
   main {
+    width: 100%;
     padding: 1rem;
+  }
+
+  .primary-btn {
+    width: 100%;
   }
 
   .swap-control {
     margin: -0.25rem 0 0.5rem;
   }
-
-  .swap-btn {
-    transform: rotate(90deg);
-  }
-
-  .swap-btn:hover {
-    transform: rotate(90deg);
-  }
-
   .swap-btn:disabled {
     transform: rotate(90deg);
+  }
+
+  .diff-output-container {
+    flex-direction: column;
+  }
+
+  .diff-output-old {
+    border-right: none;
+    border-bottom: 1px solid var(--border-solid);
   }
 }
