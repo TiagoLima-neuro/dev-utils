@@ -7,6 +7,7 @@ A secure, client-side only developer utility application for internal use. This 
 ### Encoders & Compressors
 - Base64 encoding and decoding
 - Base91 encoding and decoding
+- MD5 checksum generation (`md5sum` style hex output)
 - GZIP compression and decompression
 - ZSTD compression and decompression (simplified implementation)
 
@@ -65,7 +66,7 @@ graph TB
         UI["🖥️ User Interface<br/>HTML + CSS + TypeScript"]
         
         subgraph "Core Modules"
-            ENC["🔐 Encoders<br/>Base64, Base91, SHA256"]
+            ENC["🔐 Encoders<br/>Base64, Base91, MD5, SHA256"]
             COMP["📦 Compressors<br/>GZIP, ZSTD"]
             FMT["📝 Formatters<br/>JSON, YAML"]
             VAL["✅ Validators<br/>CPF, CNPJ"]

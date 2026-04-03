@@ -8,9 +8,11 @@ global.TextDecoder = TextDecoder as any;
 import { getEncoderFormatLabel, isHashFormat } from "../src/encoders/workflow";
 
 test("hash formats are always treated as one-way", () => {
+  assert.strictEqual(isHashFormat("md5sum"), true);
   assert.strictEqual(isHashFormat("sha256-base64"), true);
   assert.strictEqual(isHashFormat("sha256-hex"), true);
   assert.strictEqual(isHashFormat("base64"), false);
+  assert.strictEqual(getEncoderFormatLabel("md5sum"), "MD5 (md5sum)");
   assert.strictEqual(getEncoderFormatLabel("sha256-hex"), "SHA256 (Hex)");
   assert.strictEqual(getEncoderFormatLabel("base64"), "Base64");
 });

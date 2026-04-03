@@ -3,6 +3,7 @@ import {
   base64Decode,
   base91Encode,
   base91Decode,
+  md5sum,
   sha256,
 } from "./encoders/base.js";
 import {
@@ -128,9 +129,7 @@ function updateEncoderUi() {
     button.disabled = isHash && buttonMode === "decode";
   });
 
-  encoderRunBtn.textContent = isHash
-    ? `Gerar ${getEncoderFormatLabel(format)}`
-    : "Executar";
+  encoderRunBtn.textContent = "Executar";
   encoderInput.placeholder = isHash
     ? "Texto para gerar o hash"
     : currentEncoderMode === "encode"
@@ -254,6 +253,9 @@ encoderRunBtn?.addEventListener("click", async () => {
         break;
       case "zstd:decode":
         result = await zstdDecompress(inputText);
+        break;
+      case "md5sum:hash":
+        result = md5sum(inputText);
         break;
       case "sha256-base64:hash":
         result = await sha256(inputText, "base64");
